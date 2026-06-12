@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FAWAM project page for force-aware world action models in closed-loop contact-rich manipulation."
+    />
+    <title>FAWAM</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="#top">FAWAM</a>
+        <div class="nav-links" aria-label="Page navigation">
+          <a href="#abstract">Abstract</a>
+          <a href="#method">Method</a>
+          <a href="#results">Videos</a>
+          <a href="#citation">Citation</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-band">
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <h1>FAWAM: Force-Aware World Action Models for Closed-Loop Contact-Rich Manipulation</h1>
+            <div class="authors" aria-label="Authors and affiliations">
+              <p class="author-line">
+                Haotian He<sup>*,1</sup>, Zeyu Yan<sup>*,2</sup>,
+                Qipeng Liu<sup>2</sup>, Ning Guo<sup>2</sup>,
+                Wenzhao Lian<sup>2,&dagger;</sup>
+              </p>
+              <p class="author-notes"><sup>*</sup> Equal Contribution; <sup>&dagger;</sup> Corresponding author</p>
+              <p class="affiliations">
+                <sup>1</sup> School of Mathematical Sciences, Peking University<br />
+                <sup>2</sup> School of Artificial Intelligence, Shanghai Jiao Tong University
+              </p>
+            </div>
+            <div class="button-row" aria-label="Project links">
+              <a class="button primary" href="https://arxiv.org/pdf/2606.08555">Paper</a>
+              <!-- <a class="button" href="https://arxiv.org/abs/2606.08555">arXiv</a> -->
+              <!-- <a class="button" href="#results">Videos</a>
+              <a class="button" href="#citation">BibTeX</a> -->
+              <a class="button" href="https://github.com/HaotianHehaha/FAWAM">Code</a>
+            </div>
+          </div>
+          <!-- <figure class="hero-visual">
+            <img src="assets/img/teaser.png" alt="FAWAM teaser diagram" />
+            <figcaption>
+              FAWAM combines force-conditioned action modeling, force-envisioned prediction,
+              and force-guided residual correction.
+            </figcaption>
+          </figure> -->
+        </div>
+      </section>
+
+      <section id="abstract" class="section-band">
+        <div class="container narrow">
+          <h2>Abstract</h2>
+          <p>
+            Force signals provide critical interaction cues for contact-rich robotic manipulation.
+            However, existing methods mostly use force as an additional observation modality,
+            without fully exploiting its role in modeling future interaction dynamics or guiding
+            execution-time feedback correction. In this paper, we propose
+            <strong>FAWAM</strong>, a force-aware world action model that incorporates force
+            information at three levels: perception, prediction, and closed-loop execution. FAWAM
+            first encodes historical 6-axis force/torque signals to modulate action generation,
+            then jointly predicts future actions and end-effector wrenches to explicitly model
+            contact evolution. It further introduces a residual correction module that uses the
+            predicted wrench trajectory as an execution-time reference to refine actions online
+            based on real-time force feedback. Real-world experiments across multiple contact-rich
+            tasks show that FAWAM improves the average success rate by <strong>36.25%</strong>
+            over vision-only baselines and <strong>21.25%</strong> over existing force-aware
+            baselines, demonstrating the effectiveness of our force-aware framework for robust
+            contact-rich manipulation.
+          </p>
+        </div>
+      </section>
+
+      <section id="method" class="section-band soft">
+        <div class="container">
+          <h2>Method Overview</h2>
+         
+            <figure>
+              <img src="assets/img/overview.png" alt="Force-Envisioned Action Model overview" />
+            </figure>
+            <p>
+            FAWAM consists of a Force-Envisioned Action Model running at 1Hz and a Force-Guided Residual Corrector running at 10Hz. The Force-Envisioned Action Model encodes recent force/torque histories into compact contact features and injects them into action generation through AdaLN-Zero-style modulation. It also jointly predicts future action and force trajectories, encouraging the model to learn the coupling between robot motions and their contact consequences. The Force-Guided Residual Correction module learns from human interventions and corrects the base action online with a residual action and an intervention gate. It uses the predicted force trajectory as guidance for online adaptation to unexpected contact changes within an action chunk. By comparing the predicted force reference with real-time force feedback, it provides timely residual corrections and improves execution-time robustness.
+          </p>
+        </div>
+      </section>
+
+      <section id="results" class="section-band">
+        <div class="container">
+          <div class="section-head">
+            <h2>Experimental Results</h2>
+          </div>
+
+          <div class="video-comparison">
+            <h3>Real-World Rollout Comparison</h3>
+            <p>
+              We evaluate FAWAM on four contact-rich manipulation tasks: erasing a whiteboard,
+              peeling a cucumber, pivoting a box, and wiping a vase. Each task requires precise
+              force regulation and adaptation to varying contact conditions. GE-Act is a
+              vision-only baseline that generates actions from visual observations, while
+              force-conditioned GE-Act extends GE-Act by adding force as an extra observation
+              input. The videos below show representative rollout comparisons between these two
+              baselines and FAWAM across the four tasks. All videos on this page are played at 2x
+              speed.
+             </p>
+            <div class="video-grid grid-three" aria-label="Visual-only, force-observation, and FAWAM comparison">
+              
+              <div class="grid-head task-head">Task</div>
+              <div class="grid-head">GE-Act</div>
+              <div class="grid-head">FORCE-CONDITIONED GE-Act</div>
+              <div class="grid-head">FAWAM</div>
+
+              <div class="task-label">Erase Board</div>
+              <video src="assets/videos/wipe_board/visual_only.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_board/force_obs.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_board/fawam.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Peel Cucumber</div>
+              <video src="assets/videos/peel_cucumber/visual_only.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/peel_cucumber/force_obs.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/peel_cucumber/fawam.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Pivot Box</div>
+              <video src="assets/videos/pivot_box/visual_only.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/pivot_box/force_obs.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/pivot_box/fawam.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Wipe Vase</div>
+              <video src="assets/videos/wipe_vase/visual_only.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_vase/force_obs.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_vase/fawam.mp4" controls autoplay muted loop playsinline></video>
+            </div>
+          </div>
+
+          <div class="video-comparison correction-comparison">
+            <h3>Perturbation Rollouts Comparison</h3>
+              <p>
+                To evaluate the effectiveness of FAWAM's online residual correction, we introduce execution-time perturbations across all four tasks. The videos below compare FAWAM with and without the Force-Guided Residual Corrector. With online correction, FAWAM uses discrepancies between predicted and measured wrenches to adapt its actions and recover stable contact. Without online correction, the policy often fails to recover from these perturbations. All videos on this page are played at 2x speed.
+
+              </p>
+            <div class="video-grid grid-two" aria-label="With-correction and without-correction comparison">
+              <div class="grid-head task-head">Task</div>
+              <div class="grid-head">Without Correction</div>
+              <div class="grid-head">With Correction</div>
+
+              <div class="task-label">Erase Board</div>
+              <video src="assets/videos/wipe_board/without_correction.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_board/with_correction.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Peel Cucumber</div>
+              <video src="assets/videos/peel_cucumber/without_correction.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/peel_cucumber/with_correction.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Pivot Box</div>
+              <video src="assets/videos/pivot_box/without_correction.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/pivot_box/with_correction.mp4" controls autoplay muted loop playsinline></video>
+
+              <div class="task-label">Wipe Vase</div>
+              <video src="assets/videos/wipe_vase/without_correction.mp4" controls autoplay muted loop playsinline></video>
+              <video src="assets/videos/wipe_vase/with_correction.mp4" controls autoplay muted loop playsinline></video>
+            </div>
+          </div>
+
+          <div class="video-comparison quantitative-results">
+            <h3>Quantitative Results</h3>
+    
+            <figure class="main-results-figure">
+              <img src="assets/img/main_results.png" alt="Main real-world evaluation results" />
+              <figcaption>
+                Main real-world evaluation results. Avg. SR denotes average success rate.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="citation" class="section-band soft">
+        <div class="container narrow">
+          <h2>Citation</h2>
+          <pre><code>@misc{he2026fawam,
+  title         = {FAWAM: Force-Aware World Action Models for Closed-Loop Contact-Rich Manipulation},
+  author        = {Haotian He and Zeyu Yan and Qipeng Liu and Ning Guo and Wenzhao Lian},
+  year          = {2026},
+  eprint        = {2606.08555},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2606.08555}
+}</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>FAWAM Project Page. Built as a static GitHub Pages scaffold.</p>
+    </footer>
+
+    <script>
+      document.querySelectorAll("video").forEach((video) => {
+        const setDoubleSpeed = () => {
+          video.defaultPlaybackRate = 2;
+          video.playbackRate = 2;
+        };
+        setDoubleSpeed();
+        video.addEventListener("loadedmetadata", setDoubleSpeed);
+      });
+    </script>
+  </body>
+</html>
